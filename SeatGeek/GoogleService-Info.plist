@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1056552279466-615kbvnjg0be4m4l0njqsp6hhalo7jo7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1056552279466-615kbvnjg0be4m4l0njqsp6hhalo7jo7</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBw6dtxdz-8ZVM4mTw15b9C07i2mZuFSfQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1056552279466</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>aayush.SeatGeek</string>
+	<key>PROJECT_ID</key>
+	<string>fir-swiftui-673ec</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fir-swiftui-673ec.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1056552279466:ios:a22fe1376770b753431fd3</string>
+</dict>
+</plist>

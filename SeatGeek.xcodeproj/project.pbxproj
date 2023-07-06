@@ -13,6 +13,16 @@
 		454373022A55DAC1007153D8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 454373012A55DAC1007153D8 /* Preview Assets.xcassets */; };
 		454373042A55DAC1007153D8 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454373032A55DAC1007153D8 /* Persistence.swift */; };
 		454373072A55DAC1007153D8 /* SeatGeek.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 454373052A55DAC1007153D8 /* SeatGeek.xcdatamodeld */; };
+		4587C06C2A55DC8800BE2AA8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C06B2A55DC8800BE2AA8 /* MainView.swift */; };
+		4587C06E2A55DC9100BE2AA8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C06D2A55DC9100BE2AA8 /* LoginView.swift */; };
+		4587C0702A55DD0200BE2AA8 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C06F2A55DD0200BE2AA8 /* EventsView.swift */; };
+		4587C0722A55DD2200BE2AA8 /* MyEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C0712A55DD2200BE2AA8 /* MyEventsView.swift */; };
+		4587C0762A55E9F400BE2AA8 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C0752A55E9F400BE2AA8 /* CustomTextField.swift */; };
+		4587C0782A55F44900BE2AA8 /* GrowingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C0772A55F44900BE2AA8 /* GrowingButton.swift */; };
+		4587C07A2A55F69300BE2AA8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4587C0792A55F69300BE2AA8 /* GoogleService-Info.plist */; };
+		4587C07D2A55F71B00BE2AA8 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4587C07C2A55F71B00BE2AA8 /* FirebaseAuth */; };
+		4587C07F2A55F76B00BE2AA8 /* FirebaseAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */; };
+		45A348B82A5651480004BBD4 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A348B72A5651480004BBD4 /* SignUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +33,15 @@
 		454373012A55DAC1007153D8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		454373032A55DAC1007153D8 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		454373062A55DAC1007153D8 /* SeatGeek.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SeatGeek.xcdatamodel; sourceTree = "<group>"; };
+		4587C06B2A55DC8800BE2AA8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		4587C06D2A55DC9100BE2AA8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		4587C06F2A55DD0200BE2AA8 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
+		4587C0712A55DD2200BE2AA8 /* MyEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyEventsView.swift; sourceTree = "<group>"; };
+		4587C0752A55E9F400BE2AA8 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		4587C0772A55F44900BE2AA8 /* GrowingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingButton.swift; sourceTree = "<group>"; };
+		4587C0792A55F69300BE2AA8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthController.swift; sourceTree = "<group>"; };
+		45A348B72A5651480004BBD4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4587C07D2A55F71B00BE2AA8 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +77,15 @@
 			children = (
 				454372FA2A55DAC0007153D8 /* SeatGeekApp.swift */,
 				454372FC2A55DAC0007153D8 /* ContentView.swift */,
+				4587C06D2A55DC9100BE2AA8 /* LoginView.swift */,
+				4587C06F2A55DD0200BE2AA8 /* EventsView.swift */,
+				45A348B72A5651480004BBD4 /* SignUpView.swift */,
+				4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */,
+				4587C0752A55E9F400BE2AA8 /* CustomTextField.swift */,
+				4587C0712A55DD2200BE2AA8 /* MyEventsView.swift */,
+				4587C0772A55F44900BE2AA8 /* GrowingButton.swift */,
+				4587C06B2A55DC8800BE2AA8 /* MainView.swift */,
+				4587C0792A55F69300BE2AA8 /* GoogleService-Info.plist */,
 				454372FE2A55DAC1007153D8 /* Assets.xcassets */,
 				454373032A55DAC1007153D8 /* Persistence.swift */,
 				454373052A55DAC1007153D8 /* SeatGeek.xcdatamodeld */,
@@ -89,6 +118,9 @@
 			dependencies = (
 			);
 			name = SeatGeek;
+			packageProductDependencies = (
+				4587C07C2A55F71B00BE2AA8 /* FirebaseAuth */,
+			);
 			productName = SeatGeek;
 			productReference = 454372F72A55DAC0007153D8 /* SeatGeek.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +149,9 @@
 				Base,
 			);
 			mainGroup = 454372EE2A55DAC0007153D8;
+			packageReferences = (
+				4587C07B2A55F71B00BE2AA8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 454372F82A55DAC0007153D8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -133,6 +168,7 @@
 			files = (
 				454373022A55DAC1007153D8 /* Preview Assets.xcassets in Resources */,
 				454372FF2A55DAC1007153D8 /* Assets.xcassets in Resources */,
+				4587C07A2A55F69300BE2AA8 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,10 +179,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4587C07F2A55F76B00BE2AA8 /* FirebaseAuthController.swift in Sources */,
+				4587C06E2A55DC9100BE2AA8 /* LoginView.swift in Sources */,
+				4587C0702A55DD0200BE2AA8 /* EventsView.swift in Sources */,
 				454373042A55DAC1007153D8 /* Persistence.swift in Sources */,
+				45A348B82A5651480004BBD4 /* SignUpView.swift in Sources */,
+				4587C0722A55DD2200BE2AA8 /* MyEventsView.swift in Sources */,
 				454372FD2A55DAC0007153D8 /* ContentView.swift in Sources */,
 				454373072A55DAC1007153D8 /* SeatGeek.xcdatamodeld in Sources */,
+				4587C06C2A55DC8800BE2AA8 /* MainView.swift in Sources */,
 				454372FB2A55DAC0007153D8 /* SeatGeekApp.swift in Sources */,
+				4587C0762A55E9F400BE2AA8 /* CustomTextField.swift in Sources */,
+				4587C0782A55F44900BE2AA8 /* GrowingButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +389,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4587C07B2A55F71B00BE2AA8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4587C07C2A55F71B00BE2AA8 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4587C07B2A55F71B00BE2AA8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		454373052A55DAC1007153D8 /* SeatGeek.xcdatamodeld */ = {
