@@ -18,6 +18,10 @@ struct MainView: View {
                 .tabItem {
                     Label("My Events", systemImage: "list.star")
                 }
+            ProfileView()
+                .tabItem {
+                    Label("My Profile", systemImage: "person.crop.circle.fill")
+                }
         }
     }
 }
