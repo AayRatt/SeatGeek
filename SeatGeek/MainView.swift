@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @EnvironmentObject var dbHelper : FirestoreController
+    
     var body: some View {
         TabView {
             EventsView()

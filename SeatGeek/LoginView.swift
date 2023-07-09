@@ -8,6 +8,7 @@ struct LoginView: View {
     @FocusState private var isFocused: Bool
     @State private var showAlert: Bool = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @AppStorage("loggedUser") var loggedUser: String = ""
     @EnvironmentObject var authHelper:FirebaseAuthController
 
     var body: some View {
@@ -47,10 +48,11 @@ struct LoginView: View {
                     Group {
                         Spacer()
                         Button("Login") {
-                            authHelper.signIn(email: email, password: password) { success in
+                            authHelper.signIn(email: email, password: password) { success, userEmail in
                                 if success {
                                     print("User authenticated successfully.")
                                     isLoggedIn = true
+                                    loggedUser = userEmail ?? ""
                                     
                                 } else {
                                     print("Authentication failed.")

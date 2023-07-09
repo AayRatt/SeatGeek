@@ -14,6 +14,7 @@ struct SeatGeekApp: App {
     let persistenceController = PersistenceController.shared
 
     let authHelper = FirebaseAuthController()
+
     
     init() {
         FirebaseApp.configure()

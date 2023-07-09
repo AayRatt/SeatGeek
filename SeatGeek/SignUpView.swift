@@ -36,7 +36,7 @@ struct SignUpView: View {
                         Spacer()
                             .frame(height: 60)
                         Button("Sign Up") {
-                            authHelper.signUp(email: email, password: password)
+                            authHelper.signUp(name: name, email: email, password: password)
                             isLoggedIn = true
                         }
                         .buttonStyle(GrowingButton(width: 320))

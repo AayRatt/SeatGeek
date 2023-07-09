@@ -10,9 +10,12 @@ import CoreData
 
 struct ContentView: View {
     @AppStorage("isLoggedIn") var isLoggedIn:Bool = false
+    
+    private var dbHelper = FirestoreController.getInstance()
+    
     var body: some View {
         if isLoggedIn {
-            MainView()
+            MainView().environmentObject(self.dbHelper)
         } else {
             LoginView()
         }
