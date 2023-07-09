@@ -27,7 +27,7 @@ struct MyEventsView: View {
                 List {
                     ForEach(self.dbHelper.favEventList.indices, id: \.self) { index in
                         let event = self.dbHelper.favEventList[index]
-                        //NavigationLink(destination: EventDetailView(event: event)) {
+//                        NavigationLink(destination: EventDetailView(event: event)) {
                             HStack {
                                 Text("\(event.venue.name)")
                                     .bold()
