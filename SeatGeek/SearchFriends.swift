@@ -10,75 +10,39 @@ import FirebaseFirestore
 
 struct SearchFriends: View {
     @State private var friendToSearch = ""
-    @EnvironmentObject var dbHelper : FirestoreController
+    @EnvironmentObject var dbHelper: FirestoreController
     @State private var searchText = ""
-    
+
     var searchResults: [User] {
-
-        if searchText.isEmpty{
-
+        if searchText.isEmpty {
             return self.dbHelper.userList
-
-        }else{
-            
-            return self.dbHelper.userList.filter{$0.name.localizedCaseInsensitiveContains(searchText)}
-
+        } else {
+            return self.dbHelper.userList.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
-    
+
     var body: some View {
-        Text("Search Your Friends here!")
-        VStack{
-            
-            List{
-                ForEach(searchResults.enumerated().map({$0}), id: \.element.self){index, user in
-                
-                
-                    NavigationLink{
-                        
-                        UserDetailView(selectedUserIndex: index).environmentObject(self.dbHelper)
-    //                    ParkingDetailView(selectedParkingIndex: index).environmentObject(self.dbHelper)
-                    }label:{
-                        HStack{
-                            
-                            Text(" \(user.name)")
+        Text("Search Friends here!")
+        VStack {
+            List {
+                ForEach(searchResults, id: \.self) { user in
+                    NavigationLink(destination: UserDetailView(selectedUser: user).environmentObject(self.dbHelper)) {
+                        HStack {
+                            Text(user.name)
                                 .bold()
-                            
-                        }//HStack
-                    }//Navigation Link
-                    
-                }//ForEach
-                .onDelete(perform: { indexSet in
-
-    //                for index in indexSet{
-    //
-    //                    //get the employee object to delete
-    //                    let parking = self.dbHelper.parkList[index]
-    //
-    //                    //delete the document from database
-    //                    self.dbHelper.deleteParking(parkingToDelete: parking)
-    //                }
-
-                })//onDelete
-            }//List
+                        }
+                    }
+                }
+            }
             .searchable(text: $searchText)
         }
-        .onAppear(){
+        .onAppear() {
             self.dbHelper.userList.removeAll()
             self.dbHelper.getAllUsers()
         }
-       
-        
-        
-        
     }
-    
-    
-    
-
-
-
 }
+
 
 
 

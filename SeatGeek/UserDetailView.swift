@@ -9,7 +9,8 @@ import SwiftUI
 
 struct UserDetailView: View {
     
-    let selectedUserIndex : Int
+    //let selectedUserIndex : Int
+    let selectedUser:User
     @EnvironmentObject var dbHelper : FirestoreController
     @State private var userName: String = ""
     @AppStorage("loggedUser") var loggedUser: String = ""
@@ -23,7 +24,7 @@ struct UserDetailView: View {
             Text(userName)
             
             Button{
-                 var newFriend = User(name: dbHelper.userList[selectedUserIndex].name, email: dbHelper.userList[selectedUserIndex].email)
+                var newFriend = User(name:selectedUser.name , email: selectedUser.email)
                 
                 do{
                     try self.dbHelper.addFriend(loggedUser: self.loggedUser, friend:newFriend ){ succes, error in
@@ -48,7 +49,6 @@ struct UserDetailView: View {
             .alert("Friend Added!", isPresented: $showAlert){ }
         }
         .onAppear(){
-            let selectedUser = dbHelper.userList[selectedUserIndex]
             
             self.userName = selectedUser.name
         }

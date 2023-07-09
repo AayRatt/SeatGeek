@@ -13,6 +13,10 @@ struct ProfileView: View {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @AppStorage("loggedUser") var loggedUser: String = ""
     
+    @State private var showingDeleteAlert = false
+    @State private var deleteIndexSet: IndexSet?
+
+    
     var body: some View {
             NavigationView {
                 VStack {
@@ -29,7 +33,7 @@ struct ProfileView: View {
                                 NavigationLink{
                                     
                                     FriendView(selectedUserIndex: index).environmentObject(self.dbHelper)
-                //                    ParkingDetailView(selectedParkingIndex: index).environmentObject(self.dbHelper)
+
                                 }label:{
                                     HStack{
                                         
@@ -41,19 +45,28 @@ struct ProfileView: View {
                                 
                             }//ForEach
                             .onDelete(perform: { indexSet in
-
-                //                for index in indexSet{
-                //
-                //                    //get the employee object to delete
-                //                    let parking = self.dbHelper.parkList[index]
-                //
-                //                    //delete the document from database
-                //                    self.dbHelper.deleteParking(parkingToDelete: parking)
-                //                }
+                                
+                                deleteIndexSet = indexSet
+                                showingDeleteAlert = true
 
                             })//onDelete
                             
                         }
+                    }
+                    .alert(isPresented: $showingDeleteAlert) {
+                        Alert(
+                            title: Text("Delete Friend"),
+                            message: Text("Are you sure you want to delete this friend?"),
+                            primaryButton: .destructive(Text("Delete")) {
+                                if let indexSet = deleteIndexSet {
+                                    for index in indexSet {
+                                        let friendToDelete = dbHelper.friendList[index]
+                                        dbHelper.deleteFriend(loggedUser: loggedUser, friendToDelete: friendToDelete)
+                                    }
+                                }
+                            },
+                            secondaryButton: .cancel()
+                        )
                     }
                     
                     Spacer()
@@ -71,6 +84,7 @@ struct ProfileView: View {
                     ToolbarItem(placement: .navigationBarLeading) {
                         NavigationLink(destination:SearchFriends()) {
                             Image(systemName: "magnifyingglass")
+                            Text("Search Friends")
                         }
                     }
                 }
