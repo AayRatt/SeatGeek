@@ -11,10 +11,13 @@ struct EventResponse: Codable {
     let events: [Event]
 }
 
-struct Event: Codable {
+struct Event: Codable, Identifiable {
+    var id:Int
     let type: String
     let datetimeUtc: String
     let venue: Venue
+    let performers: [Performers]
+    let stats:Stats?
 
     
     struct Venue: Codable {
@@ -31,4 +34,17 @@ struct Event: Codable {
             let lon: Double?
         }
     }
+    
+    struct Performers:Codable {
+        let images:Image
+    }
+    
+    struct Image:Codable {
+        let huge:String
+    }
+    
+    struct Stats:Codable {
+        let averagePrice:Int?
+    }
+    
 }

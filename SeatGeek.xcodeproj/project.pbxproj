@@ -23,6 +23,7 @@
 		4587C07A2A55F69300BE2AA8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4587C0792A55F69300BE2AA8 /* GoogleService-Info.plist */; };
 		4587C07D2A55F71B00BE2AA8 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4587C07C2A55F71B00BE2AA8 /* FirebaseAuth */; };
 		4587C07F2A55F76B00BE2AA8 /* FirebaseAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */; };
+		459A8A742A5B38AE00D6BC1A /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459A8A732A5B38AE00D6BC1A /* EventDetailView.swift */; };
 		45A348B82A5651480004BBD4 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A348B72A5651480004BBD4 /* SignUpView.swift */; };
 		45A348BA2A5771C70004BBD4 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A348B92A5771C70004BBD4 /* Event.swift */; };
 		4E8CCBB92A5A265B00C678B5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4E8CCBB82A5A265B00C678B5 /* FirebaseFirestore */; };
@@ -51,6 +52,7 @@
 		4587C0772A55F44900BE2AA8 /* GrowingButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingButton.swift; sourceTree = "<group>"; };
 		4587C0792A55F69300BE2AA8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthController.swift; sourceTree = "<group>"; };
+		459A8A732A5B38AE00D6BC1A /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		45A348B72A5651480004BBD4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		45A348B92A5771C70004BBD4 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4E8CCBBC2A5A290B00C678B5 /* FirestoreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreController.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				4587C06D2A55DC9100BE2AA8 /* LoginView.swift */,
 				4587C06F2A55DD0200BE2AA8 /* EventsView.swift */,
 				45A348B92A5771C70004BBD4 /* Event.swift */,
+				459A8A732A5B38AE00D6BC1A /* EventDetailView.swift */,
 				45A348B72A5651480004BBD4 /* SignUpView.swift */,
 				4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */,
 				4587C0752A55E9F400BE2AA8 /* CustomTextField.swift */,
@@ -230,6 +233,7 @@
 				4587C0762A55E9F400BE2AA8 /* CustomTextField.swift in Sources */,
 				4587C0782A55F44900BE2AA8 /* GrowingButton.swift in Sources */,
 				455E695D2A5A13E8006CB0DE /* ProfileView.swift in Sources */,
+				459A8A742A5B38AE00D6BC1A /* EventDetailView.swift in Sources */,
 				45A348BA2A5771C70004BBD4 /* Event.swift in Sources */,
 				4E8CCBC52A5A585100C678B5 /* FriendView.swift in Sources */,
 				4E8CCBBF2A5A2B5F00C678B5 /* SearchFriends.swift in Sources */,

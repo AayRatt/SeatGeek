@@ -62,7 +62,7 @@ struct MyEventsView: View {
 
                 
                 
-                let dummyEvent = Event(type: "Sports Game", datetimeUtc: "2023-07-20T18:30:00", venue: Event.Venue(state: "Texas", postalCode: "77002", name: "Sports Arena", location: Event.Venue.Location(lat: 29.7604, lon: -95.3698), address: "789 Main St", country: "United States", city: "Houston"))
+                let dummyEvent = Event(id: 832793, type: "Sports Game", datetimeUtc: "2023-07-20T18:30:00", venue: Event.Venue(state: "Texas", postalCode: "77002", name: "Sports Arena", location: Event.Venue.Location(lat: 29.7604, lon: -95.3698), address: "789 Main St", country: "United States", city: "Houston"), performers: [], stats: Event.Stats(averagePrice: 0))
 
 
                 Button{
