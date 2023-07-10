@@ -70,6 +70,21 @@ struct EventDetailView: View {
 
                                   }
                                   
+                                  try self.dbHelper.addUserToEventAtendeeList(userToAdd: self.loggedUser, event: selectedEvent!){ success, error in
+                                      
+                                      if success{
+                                          print("Success adding user to event attendee list")
+                                          showAlert = true
+                                          dismiss()
+                          
+                                          
+                                      }else{
+                                          print("Error adding user to event attendee list")
+                                      }
+                                      
+                                      
+                                  }
+                                  
                                   
                                   
                               }catch{
@@ -97,6 +112,21 @@ struct EventDetailView: View {
                                       }
                                       
 
+                                  }
+                                  
+                                  try self.dbHelper.addUserToEventAtendeeList(userToAdd: self.loggedUser, event: selectedEvent!){ success, error in
+                                      
+                                      if success{
+                                          print("Success adding user to event attendee list")
+                                          showAlert = true
+                                          dismiss()
+                          
+                                          
+                                      }else{
+                                          print("Error adding user to event attendee list")
+                                      }
+                                      
+                                      
                                   }
                                   
                                   

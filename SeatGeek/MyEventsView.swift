@@ -55,6 +55,20 @@ struct MyEventsView: View {
                                     
                                     self.dbHelper.deleteEventFromFavorites(loggedUser: self.loggedUser, eventToDelete: eventToDelete)
                                     
+                                    self.dbHelper.deleteAttendee(loggedUser: self.loggedUser, event: eventToDelete){success, error in
+                                        
+                                        if success {
+                                            
+                                            print("Success Deleting attendee from event")
+                                            
+                                            
+                                        }else{
+                                            
+                                            print("Error Deleting attendee from event")
+                                        }
+                                        
+                                    }
+                                    
                                 }
                             }
                             
@@ -77,6 +91,8 @@ struct MyEventsView: View {
                         primaryButton: .destructive(Text("Delete"), action: {
                             
                             self.dbHelper.deleteAllFavoriteEvents(loggedUser: loggedUser)
+                            
+                            self.dbHelper.deleteAttendeeFromMultipleEvents(loggedUser2: loggedUser)
                             
                             
                             

@@ -14,6 +14,7 @@ class FirestoreController : ObservableObject{
     private let COLLECTION_USERS = "users"
     private let COLLECTION_FRIENDS = "friends"
     private let COLLECTION_EVENTS = "events"
+    private let COLLECTION_ATTENDEES = "attendees"
     
     private let db : Firestore
     private static var shared : FirestoreController?
@@ -270,6 +271,106 @@ class FirestoreController : ObservableObject{
         }
     }
     
+    func addUserToEventAtendeeList(userToAdd: String, event: Event, completion: @escaping (Bool, Error?) -> Void) throws {
+        print(#function, "Inserting attendee to event")
+        
+        self.getSingleUser(email: userToAdd){user in
+            
+            if let user = user{
+                
+                let eventsCollectionRef = self.db.collection(self.COLLECTION_EVENTS)
+
+                // Build the query to search for events with matching criteria
+                let query = eventsCollectionRef
+                    .whereField("type", isEqualTo: event.type)
+                    .whereField("datetimeUtc", isEqualTo: event.datetimeUtc)
+                    .whereField("venue.name", isEqualTo: event.venue.name)
+                    .whereField("venue.postalCode", isEqualTo: event.venue.postalCode)
+                
+                query.getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print("Error checking existing event: \(error)")
+                        completion(false, error)
+                        return
+                    }
+
+                    guard let querySnapshot = querySnapshot else {
+                        print("No existing events found")
+                        completion(false, nil)
+                        return
+                    }
+
+                    if let eventDoc = querySnapshot.documents.first {
+                        // Event already exists
+                        print("Event already exists")
+                        
+                        let eventRef = eventsCollectionRef.document(eventDoc.documentID)
+                        let attendeesCollectionRef = eventRef.collection(self.COLLECTION_ATTENDEES)
+
+                        // Add the user to the attendees collection
+                        let userDocument = attendeesCollectionRef.document()
+                        do {
+                            try userDocument.setData(from: user) { error in
+                                if let error = error {
+                                    print("Error adding attendee to event: \(error)")
+                                    completion(false, error)
+                                } else {
+                                    print("Attendee added to event successfully")
+                                    completion(true, nil)
+                                }
+                            }
+                        } catch {
+                            print("Error encoding user: \(error)")
+                            completion(false, error)
+                        }
+                    } else {
+                        // Event does not exist
+                        print("Event does not exist")
+                        completion(false, nil)
+                    }
+                }
+                
+                
+                
+            }else{
+                print("User Not Found so it can't be added")
+            }
+            
+            
+            
+        }
+        
+        
+    }
+    
+    func getSingleUser(email: String, completion: @escaping (User?) -> Void) {
+        let usersCollectionRef = db.collection(COLLECTION_USERS)
+        
+        usersCollectionRef.whereField("email", isEqualTo: email)
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error getting user data: \(error)")
+                    completion(nil)
+                    return
+                }
+                
+                guard let document = querySnapshot?.documents.first else {
+                    print("No user data found")
+                    completion(nil)
+                    return
+                }
+                
+                let data = document.data()
+                if let name = data["name"] as? String,
+                   let email = data["email"] as? String {
+                    let user = User(id:nil, name: name, email: email)
+                    completion(user)
+                } else {
+                    completion(nil) // Invalid user data
+                }
+        }
+    }
+
     func getMyEvents(loggedUser:String){
     print(#function, "Trying to get all user's events.")
             do{
@@ -393,6 +494,83 @@ class FirestoreController : ObservableObject{
             }
         
     }
+    
+    func deleteAttendee(loggedUser: String, event:Event, completion: @escaping (Bool, Error?) -> Void) {
+        let eventsCollectionRef = db.collection(COLLECTION_EVENTS)
+        
+        let query = eventsCollectionRef
+            .whereField("type", isEqualTo: event.type)
+            .whereField("datetimeUtc", isEqualTo: event.datetimeUtc)
+            .whereField("venue.name", isEqualTo: event.venue.name)
+        
+        query.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error deleting attendee: \(error)")
+                completion(false, error)
+                return
+            }
+            
+            guard let querySnapshot = querySnapshot else {
+                print("No matching events found")
+                completion(false, nil)
+                return
+            }
+            
+            for document in querySnapshot.documents {
+                let attendeesCollectionRef = document.reference.collection(self.COLLECTION_ATTENDEES)
+                
+                attendeesCollectionRef.whereField("email", isEqualTo: loggedUser).getDocuments { (attendeesQuerySnapshot, attendeesError) in
+                    if let attendeesError = attendeesError {
+                        print("Error deleting attendee: \(attendeesError)")
+                        completion(false, attendeesError)
+                        return
+                    }
+                    
+                    guard let attendeesQuerySnapshot = attendeesQuerySnapshot else {
+                        print("No matching attendees found")
+                        completion(false, nil)
+                        return
+                    }
+                    
+                    for attendeeDocument in attendeesQuerySnapshot.documents {
+                        attendeeDocument.reference.delete { attendeeError in
+                            if let attendeeError = attendeeError {
+                                print("Error deleting attendee document: \(attendeeError)")
+                                completion(false, attendeeError)
+                            } else {
+                                print("Attendee document deleted successfully")
+                                completion(true, nil)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func deleteAttendeeFromMultipleEvents(loggedUser2:String){
+        
+        for event in self.favEventList{
+            
+            self.deleteAttendee(loggedUser: loggedUser2, event: event){success, error in
+                
+                if success {
+                    print("Sucess! User was deleted from all events atendee list  ")
+                }else{
+                    
+                    print("Error! User was NOT deleted from all events atendee list  ")
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    
+
+    
+    
 
 }
 
