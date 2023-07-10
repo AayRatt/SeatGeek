@@ -10,9 +10,9 @@ import SwiftUI
 struct EventDetailView: View {
   @State var selectedEvent: Event?
   @State private var showAlert: Bool = false
-  @EnvironmentObject var dbHelper : FirestoreController
+  @EnvironmentObject var dbHelper: FirestoreController
   @AppStorage("loggedUser") var loggedUser: String = ""
-    
+
   @Environment(\.dismiss) var dismiss
 
   var body: some View {
@@ -45,100 +45,93 @@ struct EventDetailView: View {
           VStack(spacing: 14) {
             HStack {
               Button("Add to My Events") {
-                  //TODO: Add to Event List
-                  self.dbHelper.checkExistingEvent(event: selectedEvent!) {exists, error in
-                      if let error = error {
-                          // Handle error
-                          print("Error checking existing event: \(error.localizedDescription)")
-                      }else {
-                          if exists {
-                              
-                              do{
-                                  
-                                  try self.dbHelper.addEventToFavorites(loggedUser: loggedUser, event: selectedEvent!){ success, error in
-                                      
-                                      if success{
-                                          print("Success adding event to favorites")
-                                          showAlert = true
-                                          dismiss()
-                          
-                                          
-                                      }else{
-                                          print("Error adding event to favorites")
-                                      }
-                                      
+                //TODO: Add to Event List
+                self.dbHelper.checkExistingEvent(event: selectedEvent!) { exists, error in
+                  if let error = error {
+                    // Handle error
+                    print("Error checking existing event: \(error.localizedDescription)")
+                  } else {
+                    if exists {
 
-                                  }
-                                  
-                                  try self.dbHelper.addUserToEventAtendeeList(userToAdd: self.loggedUser, event: selectedEvent!){ success, error in
-                                      
-                                      if success{
-                                          print("Success adding user to event attendee list")
-                                          showAlert = true
-                                          dismiss()
-                          
-                                          
-                                      }else{
-                                          print("Error adding user to event attendee list")
-                                      }
-                                      
-                                      
-                                  }
-                                  
-                                  
-                                  
-                              }catch{
-                                  
-                              }
-                              
-                              
-                              
-                          }else {
-                              // Event does not exist, proceed with creating it
-                              self.dbHelper.createEvent(eventToCreate: selectedEvent!)
-                              
-                              do{
-                                  
-                                  try self.dbHelper.addEventToFavorites(loggedUser: loggedUser, event: selectedEvent!){ success, error in
-                                      
-                                      if success{
-                                          print("Success adding event to favorites")
-                                          showAlert = true
-                                          dismiss()
-                          
-                                          
-                                      }else{
-                                          print("Error adding event to favorites")
-                                      }
-                                      
+                      do {
 
-                                  }
-                                  
-                                  try self.dbHelper.addUserToEventAtendeeList(userToAdd: self.loggedUser, event: selectedEvent!){ success, error in
-                                      
-                                      if success{
-                                          print("Success adding user to event attendee list")
-                                          showAlert = true
-                                          dismiss()
-                          
-                                          
-                                      }else{
-                                          print("Error adding user to event attendee list")
-                                      }
-                                      
-                                      
-                                  }
-                                  
-                                  
-                                  
-                              }catch{
-                                  
-                              }
+                        try self.dbHelper.addEventToFavorites(
+                          loggedUser: loggedUser, event: selectedEvent!
+                        ) { success, error in
+
+                          if success {
+                            print("Success adding event to favorites")
+                            showAlert = true
+                            dismiss()
+
+                          } else {
+                            print("Error adding event to favorites")
                           }
-                          
-                          
+
+                        }
+
+                        try self.dbHelper.addUserToEventAtendeeList(
+                          userToAdd: self.loggedUser, event: selectedEvent!
+                        ) { success, error in
+
+                          if success {
+                            print("Success adding user to event attendee list")
+                            showAlert = true
+                            dismiss()
+
+                          } else {
+                            print("Error adding user to event attendee list")
+                          }
+
+                        }
+
+                      } catch {
+
                       }
+
+                    } else {
+                      // Event does not exist, proceed with creating it
+                      self.dbHelper.createEvent(eventToCreate: selectedEvent!)
+
+                      do {
+
+                        try self.dbHelper.addEventToFavorites(
+                          loggedUser: loggedUser, event: selectedEvent!
+                        ) { success, error in
+
+                          if success {
+                            print("Success adding event to favorites")
+                            showAlert = true
+                            dismiss()
+
+                          } else {
+                            print("Error adding event to favorites")
+                          }
+
+                        }
+
+                        try self.dbHelper.addUserToEventAtendeeList(
+                          userToAdd: self.loggedUser, event: selectedEvent!
+                        ) { success, error in
+
+                          if success {
+                            print("Success adding user to event attendee list")
+                            showAlert = true
+                            dismiss()
+
+                          } else {
+                            print("Error adding user to event attendee list")
+                          }
+
+                        }
+
+                      } catch {
+
+                      }
+                    }
+
                   }
+                }
 
               }
               .alert("Added", isPresented: $showAlert) {}

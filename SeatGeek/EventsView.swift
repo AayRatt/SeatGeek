@@ -8,6 +8,8 @@ struct EventsView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var annotations = [MKPointAnnotation]()
     @State private var selectedEvent: Event?
+    @State private var isShowingSearchAlert = false
+    @State private var searchCity = ""
 
     func loadDataFromAPI() {
         print("Fetching Events from API")
@@ -69,21 +71,54 @@ struct EventsView: View {
 
         task.resume()
     }
+    
+    func searchCityAndLoadData() {
+            let geocoder = CLGeocoder()
+            geocoder.geocodeAddressString(searchCity) { placemarks, error in
+                if let error = error {
+                    print("Geocoding Error: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let placemark = placemarks?.first else {
+                    print("No placemark found for the provided city")
+                    return
+                }
+                
+                let coordinate = placemark.location?.coordinate
+                if let coordinate = coordinate {
+                    centerCoordinate = coordinate
+                    loadDataFromAPI()
+                }
+            }
+        }
+
 
     var body: some View {
         NavigationStack {
             MapView(centerCoordinate: $centerCoordinate, annotations: annotations, selectedEvent: $selectedEvent)
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    loadDataFromAPI()
+                                }
+                }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .navigationBarLeading) {
                         Button {
-                            loadDataFromAPI()
-                        } label: {
-                            Image(systemName: "arrow.clockwise")
+                            //Search City Here
+                            isShowingSearchAlert = true
+                        }label: {
+                            Label("City", systemImage: "magnifyingglass")
                         }
                     }
                 }
                 .sheet(item: $selectedEvent) { event in
                     EventDetailView(selectedEvent: event)
+                }
+                .alert("Search by City", isPresented: $isShowingSearchAlert) {
+                    TextField("Enter City Name", text: $searchCity)
+                    Button("Search", action: searchCityAndLoadData)
+                    Button("Cancel", role: .cancel) {}
                 }
         }
     }
@@ -106,7 +141,7 @@ struct MapView: UIViewRepresentable {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = true
-        locationManager.requestLocation() // Request a single location update
+        locationManager.requestLocation()
         return mapView
     }
 
@@ -114,8 +149,19 @@ struct MapView: UIViewRepresentable {
         view.removeAnnotations(view.annotations)
         let eventAnnotations = annotations.map { $0 as MKAnnotation }
         view.addAnnotations(eventAnnotations)
+
+        if let userLocation = view.userLocation.location?.coordinate {
+            let region = MKCoordinateRegion(center: userLocation, latitudinalMeters: 35000, longitudinalMeters: 35000)
+            view.setRegion(region, animated: true)
+        }
+        updateMapRegion(view: view)
     }
 
+    func updateMapRegion(view: MKMapView) {
+            let region = MKCoordinateRegion(center: centerCoordinate, latitudinalMeters: 35000, longitudinalMeters: 35000)
+            view.setRegion(region, animated: true)
+        }
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
