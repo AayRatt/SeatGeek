@@ -14,9 +14,11 @@ struct MyEventsView: View {
     @State private var showAlert:Bool = false
     
     @State private var showingDeleteAlert = false
+    @State private var showingDeleteAlert2 = false
     @State private var deleteIndexSet: IndexSet?
     
-    //@Environment(\.dismiss) var dismiss
+    
+    
     
     var body: some View {
         
@@ -24,15 +26,16 @@ struct MyEventsView: View {
             
             VStack{
                 
+                Text("Events that you are attending to:")
+                
                 List {
-                    ForEach(self.dbHelper.favEventList.indices, id: \.self) { index in
-                        let event = self.dbHelper.favEventList[index]
-//                        NavigationLink(destination: EventDetailView(event: event)) {
-                            HStack {
+                    ForEach(self.dbHelper.favEventList, id: \.id) { event in
+                        HStack {
+                            NavigationLink(destination: FavoriteEventDetailedView(selectedEvent: event)) {
                                 Text("\(event.venue.name)")
                                     .bold()
                             }
-                        //}
+                        }
                     }
                     .onDelete(perform: { indexSet in
                         
@@ -52,72 +55,41 @@ struct MyEventsView: View {
                                     
                                     self.dbHelper.deleteEventFromFavorites(loggedUser: self.loggedUser, eventToDelete: eventToDelete)
                                     
-                                    //dismiss()
                                 }
                             }
+                            
                         },
                         secondaryButton: .cancel()
                     )
                 }
-
                 
-                
-                let dummyEvent = Event(id: 832793, type: "Sports Game", datetimeUtc: "2023-07-20T18:30:00", venue: Event.Venue(state: "Texas", postalCode: "77002", name: "Sports Arena", location: Event.Venue.Location(lat: 29.7604, lon: -95.3698), address: "789 Main St", country: "United States", city: "Houston"), performers: [], stats: Event.Stats(averagePrice: 0))
-
-
                 Button{
                     
-                    self.dbHelper.checkExistingEvent(event: dummyEvent) {exists, error in
-                        if let error = error {
-                            // Handle error
-                            print("Error checking existing event: \(error.localizedDescription)")
-                        }else {
-                            if exists {
-                                
-                                do{
-                                    
-                                    try self.dbHelper.addEventToFavorites(loggedUser: loggedUser, event: dummyEvent){ success, error in
-                                        
-                                        if success{
-                                            print("Success adding event to favorites")
-                                            showAlert = true
-                            
-                                            
-                                        }else{
-                                            print("Error adding event to favorites")
-                                        }
-                                        
-
-                                    }
-                                    
-                                    
-                                    
-                                }catch{
-                                    
-                                }
-                                
-                                
-                                
-                            }else {
-                                // Event does not exist, proceed with creating it
-                                self.dbHelper.createEvent(eventToCreate: dummyEvent)
-                            }
-                            
-                            
-                        }
-                    }
+                    showingDeleteAlert2 = true
                     
                 }label: {
-                    Text("Add To favorites")
+                    Text("Delete all events from list")
                 }
-                .alert("Event Added!", isPresented: $showAlert){ }
+                .alert(isPresented: $showingDeleteAlert2) {
+                    Alert(
+                        title: Text("Delete All Events From List"),
+                        message: Text("Are you sure you want to delete all events from your favorite list? This action cannot be undone."),
+                        primaryButton: .destructive(Text("Delete"), action: {
+                            
+                            self.dbHelper.deleteAllFavoriteEvents(loggedUser: loggedUser)
+                            
+                            
+                            
+                        }),
+                        secondaryButton: .cancel()
+                    )
+                }
                 
             }
             .onAppear(){
                 self.dbHelper.favEventList.removeAll()
                 self.dbHelper.getMyEvents(loggedUser: loggedUser)
             }
-            
             
             
         }

@@ -7,6 +7,7 @@ struct SignUpView: View {
     @State private var name:String = ""
     @FocusState private var isFocused:Bool
     @AppStorage("isLoggedIn") var isLoggedIn:Bool = false
+    @AppStorage("loggedUser") var loggedUser: String = ""
     @EnvironmentObject var authHelper:FirebaseAuthController
 
     var body: some View {
@@ -38,6 +39,7 @@ struct SignUpView: View {
                         Button("Sign Up") {
                             authHelper.signUp(name: name, email: email, password: password)
                             isLoggedIn = true
+                            loggedUser = email
                         }
                         .buttonStyle(GrowingButton(width: 320))
 

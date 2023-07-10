@@ -292,10 +292,10 @@ class FirestoreController : ObservableObject{
                                 var event : Event = try docChange.document.data(as: Event.self)
                                 
                                 //get the document id so that it can be used for updating and deleting document
-//                                var documentID = docChange.document.documentID
+                                var documentID = docChange.document.documentID
 //
 //                                //set the document id to the converted object
-//                                event.id = documentID
+                                //event.id = documentID
                                 
                                 //if new document added, perform required operations
                                 if docChange.type == .added{
@@ -364,6 +364,34 @@ class FirestoreController : ObservableObject{
                 }
             }
         }
+    }
+    
+    func deleteAllFavoriteEvents(loggedUser:String){
+        
+        let collectionRef =  db.collection(COLLECTION_USERS).document(loggedUser).collection(COLLECTION_EVENTS)
+        
+        collectionRef.getDocuments { snapshot, error in
+                guard let snapshot = snapshot else {
+                    print("Error fetching documents in collection")
+                    return
+                }
+                
+                let batch = collectionRef.firestore.batch()
+                
+                for document in snapshot.documents {
+                    let documentRef = collectionRef.document(document.documentID)
+                    batch.deleteDocument(documentRef)
+                }
+                
+                batch.commit { error in
+                    if let error = error {
+                        print("Error deleting documents in collection")
+                    } else {
+                        print("Documents in collection  deleted successfully")
+                    }
+                }
+            }
+        
     }
 
 }

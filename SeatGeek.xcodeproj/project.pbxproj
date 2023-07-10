@@ -33,6 +33,7 @@
 		4E8CCBC12A5A3CB200C678B5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CCBC02A5A3CB200C678B5 /* User.swift */; };
 		4E8CCBC32A5A47F000C678B5 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CCBC22A5A47F000C678B5 /* UserDetailView.swift */; };
 		4E8CCBC52A5A585100C678B5 /* FriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8CCBC42A5A585100C678B5 /* FriendView.swift */; };
+		4EC5BDDC2A5BA20E006CB697 /* FavoriteEventDetailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC5BDDB2A5BA20E006CB697 /* FavoriteEventDetailedView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		4E8CCBC02A5A3CB200C678B5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4E8CCBC22A5A47F000C678B5 /* UserDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
 		4E8CCBC42A5A585100C678B5 /* FriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendView.swift; sourceTree = "<group>"; };
+		4EC5BDDB2A5BA20E006CB697 /* FavoriteEventDetailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventDetailedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 				4E8CCBBE2A5A2B5F00C678B5 /* SearchFriends.swift */,
 				4E8CCBC02A5A3CB200C678B5 /* User.swift */,
 				4E8CCBC42A5A585100C678B5 /* FriendView.swift */,
+				4EC5BDDB2A5BA20E006CB697 /* FavoriteEventDetailedView.swift */,
 			);
 			path = SeatGeek;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				454373042A55DAC1007153D8 /* Persistence.swift in Sources */,
 				45A348B82A5651480004BBD4 /* SignUpView.swift in Sources */,
 				4587C0722A55DD2200BE2AA8 /* MyEventsView.swift in Sources */,
+				4EC5BDDC2A5BA20E006CB697 /* FavoriteEventDetailedView.swift in Sources */,
 				4E8CCBC12A5A3CB200C678B5 /* User.swift in Sources */,
 				454372FD2A55DAC0007153D8 /* ContentView.swift in Sources */,
 				454373072A55DAC1007153D8 /* SeatGeek.xcdatamodeld in Sources */,

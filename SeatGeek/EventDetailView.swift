@@ -12,6 +12,8 @@ struct EventDetailView: View {
   @State private var showAlert: Bool = false
   @EnvironmentObject var dbHelper : FirestoreController
   @AppStorage("loggedUser") var loggedUser: String = ""
+    
+  @Environment(\.dismiss) var dismiss
 
   var body: some View {
     NavigationStack {
@@ -58,6 +60,7 @@ struct EventDetailView: View {
                                       if success{
                                           print("Success adding event to favorites")
                                           showAlert = true
+                                          dismiss()
                           
                                           
                                       }else{
@@ -78,6 +81,29 @@ struct EventDetailView: View {
                           }else {
                               // Event does not exist, proceed with creating it
                               self.dbHelper.createEvent(eventToCreate: selectedEvent!)
+                              
+                              do{
+                                  
+                                  try self.dbHelper.addEventToFavorites(loggedUser: loggedUser, event: selectedEvent!){ success, error in
+                                      
+                                      if success{
+                                          print("Success adding event to favorites")
+                                          showAlert = true
+                                          dismiss()
+                          
+                                          
+                                      }else{
+                                          print("Error adding event to favorites")
+                                      }
+                                      
+
+                                  }
+                                  
+                                  
+                                  
+                              }catch{
+                                  
+                              }
                           }
                           
                           
