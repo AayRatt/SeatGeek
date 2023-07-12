@@ -13,6 +13,7 @@ struct UserDetailView: View {
     let selectedUser:User
     @EnvironmentObject var dbHelper : FirestoreController
     @State private var userName: String = ""
+    @State private var eventAmount: Int = 0
     @AppStorage("loggedUser") var loggedUser: String = ""
     @State private var showAlert:Bool = false
     
@@ -22,6 +23,7 @@ struct UserDetailView: View {
         
         VStack{
             Text(userName)
+            Text("This user is attending\(self.eventAmount) events!")
             
             Button{
                 var newFriend = User(name:selectedUser.name , email: selectedUser.email)
@@ -50,7 +52,23 @@ struct UserDetailView: View {
         }
         .onAppear(){
             
-            self.userName = selectedUser.name
+            self.dbHelper.userEventList.removeAll()
+            self.dbHelper.getUserEvents(userEmail: selectedUser.email)
+            
+            self.eventAmount = self.dbHelper.userEventList.count
+            
+            self.dbHelper.getSingleUser(email: selectedUser.email){user in
+                
+                if(user == nil){
+
+                    userName = "ERROR FETCH USERNAME"
+                }else{
+
+                    userName = user!.name
+                }
+
+
+            }
         }
        
     }

@@ -25,7 +25,9 @@ struct SearchFriends: View {
         Text("Search Friends here!")
         VStack {
             List {
-                ForEach(searchResults, id: \.self) { user in
+                ForEach(searchResults.indices, id: \.self) { index in
+                    let user = searchResults[index]
+                    
                     NavigationLink(destination: UserDetailView(selectedUser: user).environmentObject(self.dbHelper)) {
                         HStack {
                             Text(user.name)
@@ -33,6 +35,7 @@ struct SearchFriends: View {
                         }
                     }
                 }
+
             }
             .searchable(text: $searchText)
         }

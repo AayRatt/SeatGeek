@@ -11,7 +11,7 @@ struct EventResponse: Codable {
     let events: [Event]
 }
 
-struct Event: Codable, Identifiable {
+struct Event: Codable, Identifiable{
     var id:Int
     let type: String
     let datetimeUtc: String

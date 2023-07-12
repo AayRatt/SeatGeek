@@ -8,6 +8,7 @@ class FirestoreController : ObservableObject{
     @Published var userList = [User]()
     @Published var friendList = [User]()
     @Published var favEventList = [Event]()
+    @Published var userEventList = [Event]()
     
     
     //@Published var loggedUserInfo =  User(name: "", email: "", phone: "", carPlate: "")
@@ -53,10 +54,10 @@ class FirestoreController : ObservableObject{
                                 var user : User = try docChange.document.data(as: User.self)
                                 
                                 //get the document id so that it can be used for updating and deleting document
-                                var documentID = docChange.document.documentID
+                                //var documentID = docChange.document.documentID
                                 
                                 //set the document id to the converted object
-                                user.id = documentID
+                                //user.id = documentID
                                 
                                 //if new document added, perform required operations
                                 if docChange.type == .added{
@@ -132,10 +133,10 @@ class FirestoreController : ObservableObject{
                                 var user : User = try docChange.document.data(as: User.self)
                                 
                                 //get the document id so that it can be used for updating and deleting document
-                                var documentID = docChange.document.documentID
+                                //var documentID = docChange.document.documentID
                                 
                                 //set the document id to the converted object
-                                user.id = documentID
+                                //user.id = documentID
                                 
                                 //if new document added, perform required operations
                                 if docChange.type == .added{
@@ -167,29 +168,48 @@ class FirestoreController : ObservableObject{
             }
         }
     
-    func deleteFriend(loggedUser:String, friendToDelete:User){
-        
+    func deleteFriend(loggedUser: String, friendToDelete: User) {
         print("Deleting friend from list information")
         
-
-        do{
-            try self.db
+        do {
+            let friendsCollection = self.db
                 .collection(COLLECTION_USERS)
                 .document(loggedUser)
                 .collection(COLLECTION_FRIENDS)
-                .document(friendToDelete.id ?? "")
-                .delete{ error in
-                    if let err = error {
-                        print(#function, "Unable to delete friend from database : \(err)")
-                    }else{
-                        print("Friend delete")
+            
+            friendsCollection
+                .whereField("name", isEqualTo: friendToDelete.name)
+                .getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print(#function, "Error getting documents: \(error)")
+                        return
                     }
-            }
-        }catch let err as NSError{
-            print(#function, "Unable to delete friend from database : \(err)")
+                    
+                    guard let documents = querySnapshot?.documents else {
+                        print(#function, "No documents found")
+                        return
+                    }
+                    
+                    if documents.isEmpty {
+                        print(#function, "Friend not found")
+                        return
+                    }
+                    
+                    // Assuming there is only one friend with the same name, delete the first one
+                    let documentToDelete = documents[0]
+                    documentToDelete.reference.delete { error in
+                        if let error = error {
+                            print(#function, "Unable to delete friend from the database: \(error)")
+                        } else {
+                            print("Friend deleted")
+                        }
+                    }
+                }
+        } catch let error as NSError {
+            print(#function, "Unable to delete friend from the database: \(error)")
         }
-        
     }
+
     
     func checkExistingEvent(event: Event, completion: @escaping (Bool, Error?) -> Void) {
         
@@ -344,32 +364,35 @@ class FirestoreController : ObservableObject{
     }
     
     func getSingleUser(email: String, completion: @escaping (User?) -> Void) {
-        let usersCollectionRef = db.collection(COLLECTION_USERS)
         
-        usersCollectionRef.whereField("email", isEqualTo: email)
-            .getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error getting user data: \(error)")
-                    completion(nil)
-                    return
-                }
-                
-                guard let document = querySnapshot?.documents.first else {
-                    print("No user data found")
-                    completion(nil)
-                    return
-                }
-                
-                let data = document.data()
-                if let name = data["name"] as? String,
-                   let email = data["email"] as? String {
-                    let user = User(id:nil, name: name, email: email)
-                    completion(user)
-                } else {
-                    completion(nil) // Invalid user data
-                }
+        print(#function,"GET SINGLE USER FUNCTION")
+            let usersCollectionRef = db.collection(COLLECTION_USERS)
+            
+            usersCollectionRef.whereField("email", isEqualTo: email)
+                .getDocuments { (querySnapshot, error) in
+                    if let error = error {
+                        print("Error getting user data: \(error)")
+                        completion(nil)
+                        return
+                    }
+                    
+                    guard let document = querySnapshot?.documents.first else {
+                        print("No user data found")
+                        completion(nil)
+                        return
+                    }
+                    
+                    let data = document.data()
+                    if let name = data["name"] as? String,
+                       let email = data["email"] as? String{
+                        let user = User(name: name, email: email)
+                        completion(user)
+                    } else {
+                        completion(nil) // Invalid user data
+                    }
+            }
         }
-    }
+
 
     func getMyEvents(loggedUser:String){
     print(#function, "Trying to get all user's events.")
@@ -566,6 +589,64 @@ class FirestoreController : ObservableObject{
         }
         
     }
+    
+    
+    func getUserEvents(userEmail:String){
+    print(#function, "Trying to get all user's events.")
+            do{
+                
+                self.db
+                    .collection(COLLECTION_USERS)
+                    .document(userEmail)
+                    .collection(COLLECTION_EVENTS)
+                    .addSnapshotListener({ (querySnapshot, error) in
+                        
+                        guard let snapshot = querySnapshot else{
+                            print(#function, "Unable to retrieve data from database : \(error)")
+                            return
+                        }
+                        
+                        snapshot.documentChanges.forEach{ (docChange) in
+                            
+                            do{
+                                //convert JSON document to swift object
+                                var event : Event = try docChange.document.data(as: Event.self)
+                                
+                                //get the document id so that it can be used for updating and deleting document
+                                //var documentID = docChange.document.documentID
+//
+//                                //set the document id to the converted object
+                                //event.id = documentID
+                                
+                                //if new document added, perform required operations
+                                if docChange.type == .added{
+                                    self.userEventList.append(event)
+                                    print(#function, "New document added : \(event.venue.name)")
+                                }
+                                
+                                //if a document deleted, perform required operations
+                                if docChange.type == .removed{
+                                    print(#function, " document removed : \(event.venue.name)")
+                                }
+                                
+                                //if a document updated, perform required operations
+                                if docChange.type == .modified{
+                                    
+                                    print(#function, " document updated : \(event.venue.name)")
+                                }
+                                
+                            }catch let err as NSError{
+                                print(#function, "Unable to convert the JSON doc into Swift Object : \(err)")
+                            }
+                            
+                        }//ForEach
+                        
+                    })//addSnapshotListener
+                
+            }catch let err as NSError{
+                print(#function, "Unable to get all employee from database : \(err)")
+            }
+        }
     
     
 
