@@ -16,27 +16,28 @@ struct SearchFriends: View {
 
     var body: some View {
         
-        
-        NavigationView{
-            VStack {
-                Text("Search Friends here!")
-                List(searchResults, id: \.self) { user in
-                    NavigationLink(destination: UserDetailView(selectedUser: user).environmentObject(self.dbHelper)) {
-                        Text(user.name)
-                            .bold()
+        ZStack {
+            Color("dark").ignoresSafeArea()
+                VStack {
+                    Text("Search Friends here!")
+                    List(searchResults, id: \.self) { user in
+                        NavigationLink(destination: UserDetailView(selectedUser: user).environmentObject(self.dbHelper)) {
+                            Text(user.name)
+                                .bold()
+                        }
+                        
                     }
-                    
+                    .searchable(text: $searchText)
+                    .scrollContentBackground(.hidden)
                 }
-                .searchable(text: $searchText)
-            }
-            .onAppear() {
-                if self.dbHelper.userList.isEmpty {
-                    self.dbHelper.getAllUsers()
+                .onAppear() {
+                    if self.dbHelper.userList.isEmpty {
+                        self.dbHelper.getAllUsers()
+                    }
                 }
-            }
+
+            
         }
-        
-        
         
     }
 }

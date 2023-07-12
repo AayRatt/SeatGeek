@@ -37,13 +37,13 @@ struct LoginView: View {
                             .focused($isFocused)
                     }.textInputAutocapitalization(.never)
 
-                    Toggle(isOn: $remember) {
-                        Text("Remember Me")
-                            .foregroundColor(.white)
-                            .font(.title3)
-                    }
-                    .padding(.horizontal, 30)
-                    .padding(.top, 15)
+//                    Toggle(isOn: $remember) {
+//                        Text("Remember Me")
+//                            .foregroundColor(.white)
+//                            .font(.title3)
+//                    }
+//                    .padding(.horizontal, 30)
+//                    .padding(.top, 15)
 
                     Group {
                         Spacer()

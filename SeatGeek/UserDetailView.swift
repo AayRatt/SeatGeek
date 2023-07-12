@@ -12,71 +12,86 @@ struct UserDetailView: View {
     var body: some View {
         
         
-            VStack {
-                Text(userName)
-                Text("This user is attending \(self.dbHelper.userEventList.count) events!")
-                
-                Text("User's Next Event is:\(self.closestEvent)")
-                
-                List{
-                    if(self.dbHelper.friendsAttendingSameEvent.isEmpty){
-                        
-                        Text("None of your friends are attending this event")
-                    }else{
-                        
-                        if(self.dbHelper.friendsAttendingSameEvent.count == 1 && self.dbHelper.friendsAttendingSameEvent[0].email == selectedUser.email){
+            ZStack {
+                Color("dark").ignoresSafeArea()
+                VStack {
+                    HStack {
+                      Image(systemName: "person.circle")
+                        .resizable()
+                        .frame(width: 90, height: 90)
+                        .clipShape(Circle())
+                      Spacer().frame(width: 30)
+                      VStack {
+                        Text(userName)
+                          .font(.title)
+                          .bold()
+                          Text("\(userName) is attending \(self.dbHelper.userEventList.count) Event(s)")
+                          .font(.subheadline)
+                          Button {
+                              var newFriend = User(name: selectedUser.name, email: selectedUser.email)
+                              
+                              do {
+                                  try self.dbHelper.addFriend(loggedUser: self.loggedUser, friend: newFriend) { success, error in
+                                      if success {
+                                          print("Success adding friend")
+                                          showAlert = true
+                                          //presentationMode.wrappedValue.dismiss()
+                                      } else {
+                                          print("Error adding friend")
+                                      }
+                                  }
+                              } catch {
+                                  // Handle error
+                              }
+                          } label: {
+                              Text("Add Friend").foregroundColor(.black)
+                          }.buttonStyle(.borderedProminent)
+                          .alert("Friend Added!", isPresented: $showAlert) {
+                              // Alert content
+                          }
+                      }
+                    }.padding(15)
+                    List {
+                        Section(header: Text("Thier next event")) {
+                                Text(closestEvent)
+                        }
+                    }.scrollContentBackground(.hidden)
+                    List{
+                        if(self.dbHelper.friendsAttendingSameEvent.isEmpty){
                             
                             Text("None of your friends are attending this event")
-                            
                         }else{
                             
-                            Text("Friends attending this event:")
-                            
-                            ForEach(self.dbHelper.friendsAttendingSameEvent.indices, id:\.self) {index in
+                            if(self.dbHelper.friendsAttendingSameEvent.count == 1 && self.dbHelper.friendsAttendingSameEvent[0].email == selectedUser.email){
                                 
-                                let friend = self.dbHelper.friendsAttendingSameEvent[index]
+                                Text("None of your friends are attending this event")
                                 
-                                if(friend.name == userName){
+                            }else{
+                                
+                                Text("Friends attending this event:")
+                                
+                                ForEach(self.dbHelper.friendsAttendingSameEvent.indices, id:\.self) {index in
                                     
-                                }else{
+                                    let friend = self.dbHelper.friendsAttendingSameEvent[index]
                                     
-                                    Text("\(friend.name)")
+                                    if(friend.name == userName){
+                                        
+                                    }else{
+                                        
+                                        Text("\(friend.name)")
+                                        
+                                    }
+                                    
+                                    
                                     
                                 }
                                 
-                                
-                                
                             }
                             
+                            
+                            
                         }
-                        
-                        
-                        
-                    }
-                }
-                
-                
-                Button {
-                    var newFriend = User(name: selectedUser.name, email: selectedUser.email)
-                    
-                    do {
-                        try self.dbHelper.addFriend(loggedUser: self.loggedUser, friend: newFriend) { success, error in
-                            if success {
-                                print("Success adding friend")
-                                showAlert = true
-                                //presentationMode.wrappedValue.dismiss()
-                            } else {
-                                print("Error adding friend")
-                            }
-                        }
-                    } catch {
-                        // Handle error
-                    }
-                } label: {
-                    Text("Add Friend")
-                }
-                .alert("Friend Added!", isPresented: $showAlert) {
-                    // Alert content
+                    }.scrollContentBackground(.hidden)
                 }
             }
             .onAppear() {

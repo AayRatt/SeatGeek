@@ -96,30 +96,36 @@ struct EventsView: View {
 
     var body: some View {
         NavigationStack {
-            MapView(centerCoordinate: $centerCoordinate, annotations: annotations, selectedEvent: $selectedEvent)
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    loadDataFromAPI()
-                                }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            //Search City Here
-                            isShowingSearchAlert = true
-                        }label: {
-                            Label("City", systemImage: "magnifyingglass")
+            ZStack {
+                Color("dark").ignoresSafeArea()
+                VStack {
+                    MapView(centerCoordinate: $centerCoordinate, annotations: annotations, selectedEvent: $selectedEvent)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                            loadDataFromAPI()
+                                        }
                         }
-                    }
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button {
+                                    //Search City Here
+                                    isShowingSearchAlert = true
+                                }label: {
+                                    Image(systemName: "magnifyingglass")
+                                    Text("Search by City")
+                                }
+                            }
+                        }
+                        .sheet(item: $selectedEvent) { event in
+                            EventDetailView(selectedEvent: event)
+                        }
+                        .alert("Search by City", isPresented: $isShowingSearchAlert) {
+                            TextField("Enter City Name", text: $searchCity)
+                            Button("Search", action: searchCityAndLoadData)
+                            Button("Cancel", role: .cancel) {}
+                        }.navigationBarTitleDisplayMode(.inline)
                 }
-                .sheet(item: $selectedEvent) { event in
-                    EventDetailView(selectedEvent: event)
-                }
-                .alert("Search by City", isPresented: $isShowingSearchAlert) {
-                    TextField("Enter City Name", text: $searchCity)
-                    Button("Search", action: searchCityAndLoadData)
-                    Button("Cancel", role: .cancel) {}
-                }
+            }
         }
     }
 }

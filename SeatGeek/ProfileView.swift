@@ -6,74 +6,101 @@
 //
 
 import SwiftUI
+import UIKit
+import PhotosUI
 
 struct ProfileView: View {
-  @EnvironmentObject var authHelper: FirebaseAuthController
-  @EnvironmentObject var dbHelper: FirestoreController
-  @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-  @AppStorage("loggedUser") var loggedUser: String = ""
+  @EnvironmentObject var authHelper:FirebaseAuthController
+  @EnvironmentObject var dbHelper:FirestoreController
+  @AppStorage("isLoggedIn") var isLoggedIn:Bool = false
+  @AppStorage("loggedUser") var loggedUser:String = ""
 
   @State private var showingDeleteAlert = false
-  @State private var deleteIndexSet: IndexSet?
-  @State private var userName: String = "Lorem Ipsum"
-
+  @State private var deleteIndexSet:IndexSet?
+  @State private var userName:String = "Lorem Ipsum"
+  @State private var showingImagePicker:Bool = false
+  @State private var inputImage: UIImage?
   var body: some View {
-    NavigationView {
-      VStack {
-        HStack {
-          Image(systemName: "person.circle")
-            .resizable()
-            .frame(width: 90, height: 90)
-            .clipShape(Circle())
-          Spacer().frame(width: 30)
+    NavigationStack {
+      ZStack {
+          Color("dark").ignoresSafeArea()
           VStack {
-            Text(userName)
-              .font(.title)
-              .bold()
-              Text("You are attending \(self.dbHelper.favEventList.count) Event(s)")
-              .font(.subheadline)
-          }
-        }.padding(15)
-        List {
-          Section(header: Text("Friends List")) {
+            HStack {
+//              Image(systemName: "person.circle")
+//                .resizable()
+//                .frame(width: 90, height: 90)
+//                .clipShape(Circle())
+                                    VStack {
+                                        if let inputImage = inputImage {
+                            Image(uiImage: inputImage)
+                                .resizable()
+                                .frame(width: 90, height: 90)
+                                .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .frame(width: 90, height: 90)
+                                .clipShape(Circle())
+                        }
+                    Button("Edit") {
+                        showingImagePicker = true
+                    }
+                        .sheet(isPresented: $showingImagePicker) {
+                            EditorImagePicker(image: $inputImage)
+                        }
+                                    }
 
-              ForEach(self.dbHelper.friendList.indices, id: \.self) { index in
-                  let user = self.dbHelper.friendList[index]
-                  
-                  NavigationLink(destination: FriendView(selectedUserIndex: index).environmentObject(self.dbHelper)) {
-                      HStack {
-                          Text("\(user.name)")
-                              .bold()
+              Spacer().frame(width: 30)
+              VStack {
+                Text(userName)
+                  .font(.title)
+                  .bold()
+                  Text("You are attending \(self.dbHelper.favEventList.count) Event(s)")
+                  .font(.subheadline)
+              }.padding(.bottom, 22)
+            }.padding(15)
+            List {
+              Section(header: Text("Friends List")) {
+
+                  ForEach(self.dbHelper.friendList.indices, id: \.self) { index in
+                      let user = self.dbHelper.friendList[index]
+                      
+                      NavigationLink(destination: FriendView(selectedUserIndex: index).environmentObject(self.dbHelper)) {
+                          HStack {
+                              Text("\(user.name)")
+                                  .bold()
+                          }
                       }
                   }
+
+                .onDelete(perform: { indexSet in
+
+                  deleteIndexSet = indexSet
+                  showingDeleteAlert = true
+
+                })  //onDelete
+
               }
+            }.scrollContentBackground(.hidden)
+              
+            .alert(isPresented: $showingDeleteAlert) {
+              Alert(
+                title: Text("Delete Friend"),
+                message: Text("Are you sure you want to delete this friend?"),
+                primaryButton: .destructive(Text("Delete")) {
+                  if let indexSet = deleteIndexSet {
+                    for index in indexSet {
+                      let friendToDelete = dbHelper.friendList[index]
+                      dbHelper.deleteFriend(loggedUser: loggedUser, friendToDelete: friendToDelete)
+                    }
+                  }
+                },
+                secondaryButton: .cancel()
+              )
+            }
 
-            .onDelete(perform: { indexSet in
-
-              deleteIndexSet = indexSet
-              showingDeleteAlert = true
-
-            })  //onDelete
-
+            Spacer()
           }
-        }
-        .alert(isPresented: $showingDeleteAlert) {
-          Alert(
-            title: Text("Delete Friend"),
-            message: Text("Are you sure you want to delete this friend?"),
-            primaryButton: .destructive(Text("Delete")) {
-              if let indexSet = deleteIndexSet {
-                for index in indexSet {
-                  let friendToDelete = dbHelper.friendList[index]
-                  dbHelper.deleteFriend(loggedUser: loggedUser, friendToDelete: friendToDelete)
-                }
-              }
-            },
-            secondaryButton: .cancel()
-          )
-        }
-
-        Spacer()
       }
 
       .toolbar {
@@ -116,4 +143,50 @@ struct ProfileView_Previews: PreviewProvider {
   static var previews: some View {
     ProfileView()
   }
+}
+
+struct EditorImagePicker: UIViewControllerRepresentable{
+    @Binding var image: UIImage?
+    
+    class Coordinator: NSObject, PHPickerViewControllerDelegate{
+        var parent: EditorImagePicker
+        
+        init(_ parent: EditorImagePicker){
+            self.parent = parent
+        }
+        
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            picker.dismiss(animated: true)
+            
+            guard let provider = results.first?.itemProvider else { return }
+            
+            if provider.canLoadObject(ofClass: UIImage.self){
+                provider.loadObject(ofClass: UIImage.self){image, _ in
+                    DispatchQueue.main.async {
+                        self.parent.image = image as? UIImage
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        //configures ios to just be able to select images
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        
+        //the view of picker
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+        //leave empty for now
+    }
 }
