@@ -18,6 +18,44 @@ struct UserDetailView: View {
                 
                 Text("User's Next Event is:\(self.closestEvent)")
                 
+                List{
+                    if(self.dbHelper.friendsAttendingSameEvent.isEmpty){
+                        
+                        Text("None of your friends are attending this event")
+                    }else{
+                        
+                        if(self.dbHelper.friendsAttendingSameEvent.count == 1 && self.dbHelper.friendsAttendingSameEvent[0].email == selectedUser.email){
+                            
+                            Text("None of your friends are attending this event")
+                            
+                        }else{
+                            
+                            Text("Friends attending this event:")
+                            
+                            ForEach(self.dbHelper.friendsAttendingSameEvent.indices, id:\.self) {index in
+                                
+                                let friend = self.dbHelper.friendsAttendingSameEvent[index]
+                                
+                                if(friend.name == userName){
+                                    
+                                }else{
+                                    
+                                    Text("\(friend.name)")
+                                    
+                                }
+                                
+                                
+                                
+                            }
+                            
+                        }
+                        
+                        
+                        
+                    }
+                }
+                
+                
                 Button {
                     var newFriend = User(name: selectedUser.name, email: selectedUser.email)
                     
@@ -43,6 +81,7 @@ struct UserDetailView: View {
             }
             .onAppear() {
                 self.dbHelper.userEventList.removeAll()
+                self.dbHelper.friendsAttendingSameEvent.removeAll()
                 self.dbHelper.userClosestEvent = ""
                 self.dbHelper.getUserEvents(userEmail: selectedUser.email)
                 
@@ -58,6 +97,8 @@ struct UserDetailView: View {
                     if let event = closestEvent {
                         
                         self.closestEvent = event.venue.name
+                        
+                        self.dbHelper.getFriendsWhoAreAttendingSameEvent(event: event)
                         
                     } else {
                         

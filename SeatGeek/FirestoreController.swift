@@ -9,10 +9,10 @@ class FirestoreController : ObservableObject{
     @Published var friendList = [User]()
     @Published var favEventList = [Event]()
     @Published var userEventList = [Event]()
+    @Published var friendsAttendingSameEvent = [User]()
     var userClosestEvent = ""
     
     
-    //@Published var loggedUserInfo =  User(name: "", email: "", phone: "", carPlate: "")
     private let COLLECTION_USERS = "users"
     private let COLLECTION_FRIENDS = "friends"
     private let COLLECTION_EVENTS = "events"
@@ -591,7 +591,6 @@ class FirestoreController : ObservableObject{
         
     }
     
-    
     func getUserEvents(userEmail:String){
     print(#function, "Trying to get all user's events.")
             do{
@@ -696,6 +695,71 @@ class FirestoreController : ObservableObject{
             completion(nil)
         }
     }
+    
+    func getFriendsWhoAreAttendingSameEvent(event:Event){
+        
+        for friend in friendList{
+            
+            self.checkSingleFriendEvents(friend: friend.email, eventToCheck: event){succes, error in
+                
+                if let error = error {
+                        print("Error checking friend's events: \(error)")
+                        return
+                    }
+                    
+                    if succes {
+                        
+                        self.friendsAttendingSameEvent.append(friend)
+                        
+                    } else {
+                        print("Friend does not have a matching event")
+                    }
+                
+            }
+            
+            
+            
+        }
+        
+        
+        
+    }
+    
+    func checkSingleFriendEvents(friend: String, eventToCheck: Event, completion: @escaping (Bool, Error?) -> Void) {
+        do {
+            self.db
+                .collection(COLLECTION_USERS)
+                .document(friend)
+                .collection(COLLECTION_EVENTS)
+                .getDocuments { (querySnapshot, error) in
+                    guard let snapshot = querySnapshot else {
+                        print(#function, "Unable to retrieve data from the database: \(error)")
+                        completion(false, error)
+                        return
+                    }
+                    
+                    for document in snapshot.documents {
+                        do {
+                            let event: Event = try document.data(as: Event.self)
+                            
+                            if event.venue.name == eventToCheck.venue.name {
+                                completion(true, nil)
+                                return
+                            }
+                        } catch let err as NSError {
+                            print(#function, "Unable to convert the JSON doc into a Swift object: \(err)")
+                        }
+                    }
+                    
+                    completion(false, nil)
+                }
+        } catch let err as NSError {
+            print(#function, "Unable to get all events from the database: \(err)")
+            completion(false, err)
+        }
+    }
+
+    
 
 }
 
