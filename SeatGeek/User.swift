@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-struct User: Codable{
+struct User: Codable, Hashable{
     
 
     var name: String

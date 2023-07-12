@@ -9,6 +9,7 @@ class FirestoreController : ObservableObject{
     @Published var friendList = [User]()
     @Published var favEventList = [Event]()
     @Published var userEventList = [Event]()
+    var userClosestEvent = ""
     
     
     //@Published var loggedUserInfo =  User(name: "", email: "", phone: "", carPlate: "")
@@ -621,7 +622,7 @@ class FirestoreController : ObservableObject{
                                 //if new document added, perform required operations
                                 if docChange.type == .added{
                                     self.userEventList.append(event)
-                                    print(#function, "New document added : \(event.venue.name)")
+                                    print(#function, "New document added : \(event.venue.name) to this date:\(event.datetimeUtc)")
                                 }
                                 
                                 //if a document deleted, perform required operations
@@ -643,15 +644,58 @@ class FirestoreController : ObservableObject{
                         
                     })//addSnapshotListener
                 
+                
             }catch let err as NSError{
                 print(#function, "Unable to get all employee from database : \(err)")
             }
         }
     
-    
+    func getUserClosestEvent(userEmail: String, completion: @escaping (Event?) -> Void) {
+        print(#function, "Trying to get all user's events.")
+        do {
+            self.db
+                .collection(COLLECTION_USERS)
+                .document(userEmail)
+                .collection(COLLECTION_EVENTS)
+                .getDocuments { (querySnapshot, error) in
+                    guard let snapshot = querySnapshot else {
+                        print(#function, "Unable to retrieve data from the database: \(error)")
+                        completion(nil)
+                        return
+                    }
 
-    
-    
+                    var closestEvent: Event?
+                    var closestDateDifference: TimeInterval = .greatestFiniteMagnitude
+
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+                    for document in snapshot.documents {
+                        do {
+                            var event: Event = try document.data(as: Event.self)
+                            guard let eventDate = dateFormatter.date(from: event.datetimeUtc) else {
+                                continue
+                            }
+
+                            let currentDate = Date()
+                            let dateDifference = eventDate.timeIntervalSince(currentDate)
+
+                            if dateDifference >= 0 && dateDifference < closestDateDifference {
+                                closestDateDifference = dateDifference
+                                closestEvent = event
+                            }
+                        } catch let err as NSError {
+                            print(#function, "Unable to convert the JSON doc into a Swift object: \(err)")
+                        }
+                    }
+
+                    completion(closestEvent)
+                }
+        } catch let err as NSError {
+            print(#function, "Unable to get all events from the database: \(err)")
+            completion(nil)
+        }
+    }
 
 }
 

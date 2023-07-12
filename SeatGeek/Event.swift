@@ -11,7 +11,7 @@ struct EventResponse: Codable {
     let events: [Event]
 }
 
-struct Event: Codable, Identifiable{
+struct Event: Codable, Identifiable, Hashable{
     var id:Int
     let type: String
     let datetimeUtc: String
@@ -20,7 +20,7 @@ struct Event: Codable, Identifiable{
     let stats:Stats?
 
     
-    struct Venue: Codable {
+    struct Venue: Codable, Hashable {
         let state: String?
         let postalCode: String
         let name: String
@@ -29,21 +29,21 @@ struct Event: Codable, Identifiable{
         let country: String?
         let city: String?
         
-        struct Location: Codable {
+        struct Location: Codable, Hashable  {
             let lat: Double?
             let lon: Double?
         }
     }
     
-    struct Performers:Codable {
+    struct Performers:Codable, Hashable  {
         let images:Image
     }
     
-    struct Image:Codable {
+    struct Image:Codable, Hashable  {
         let huge:String
     }
     
-    struct Stats:Codable {
+    struct Stats:Codable, Hashable  {
         let averagePrice:Int?
     }
     
