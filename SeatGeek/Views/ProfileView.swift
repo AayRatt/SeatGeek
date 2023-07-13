@@ -94,6 +94,8 @@ struct ProfileView: View {
                       dbHelper.deleteFriend(loggedUser: loggedUser, friendToDelete: friendToDelete)
                     }
                   }
+                    
+                    
                 },
                 secondaryButton: .cancel()
               )

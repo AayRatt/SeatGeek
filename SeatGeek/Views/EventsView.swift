@@ -112,7 +112,7 @@ struct EventsView: View {
                                     isShowingSearchAlert = true
                                 }label: {
                                     Image(systemName: "magnifyingglass")
-                                    Text("Search by City")
+                                    Text("Search Event by City")
                                 }
                             }
                         }

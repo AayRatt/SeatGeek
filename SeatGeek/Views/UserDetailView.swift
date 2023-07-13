@@ -7,6 +7,7 @@ struct UserDetailView: View {
     @State private var eventAmount: Int = 0
     @AppStorage("loggedUser") var loggedUser: String = ""
     @State private var showAlert: Bool = false
+    @State private var showAlert2: Bool = false
     @State private var closestEvent = ""
 
     var body: some View {
@@ -27,32 +28,59 @@ struct UserDetailView: View {
                           .bold()
                           Text("\(userName) is attending \(self.dbHelper.userEventList.count) Event(s)")
                           .font(.subheadline)
-                          Button {
+                          Button(action: {
                               var newFriend = User(name: selectedUser.name, email: selectedUser.email)
                               
-                              do {
-                                  try self.dbHelper.addFriend(loggedUser: self.loggedUser, friend: newFriend) { success, error in
-                                      if success {
-                                          print("Success adding friend")
-                                          showAlert = true
-                                          //presentationMode.wrappedValue.dismiss()
-                                      } else {
-                                          print("Error adding friend")
+                              self.dbHelper.checkExistingFriend(loggedUser: self.loggedUser, friend: newFriend) { exists, error in
+                                  if let error = error {
+                                      // Handle error
+                                      print("Error checking existing friend: \(error.localizedDescription)")
+                                  }
+                                  
+                                  if exists {
+                                      showAlert2 = true
+                                  } else {
+                                      do {
+                                          try self.dbHelper.addFriend(loggedUser: self.loggedUser, friend: newFriend) { success, error in
+                                              if success {
+                                                  print("Success adding friend")
+                                                  showAlert = true
+                                                  //presentationMode.wrappedValue.dismiss()
+                                              } else {
+                                                  print("Error adding friend")
+                                              }
+                                          }
+                                      } catch {
+                                          // Handle error
                                       }
                                   }
-                              } catch {
-                                  // Handle error
                               }
-                          } label: {
-                              Text("Add Friend").foregroundColor(.black)
-                          }.buttonStyle(.borderedProminent)
-                          .alert("Friend Added!", isPresented: $showAlert) {
-                              // Alert content
+                          }) {
+                              if showAlert2 {
+                                  Text("You are already friends with this user")
+                                      .foregroundColor(.black)
+                              } else {
+                                  Text("Add Friend")
+                                      .foregroundColor(.black)
+                              }
                           }
+                          .buttonStyle(.borderedProminent)
+                          .alert(isPresented: $showAlert) {
+                              Alert(title: Text("Friend Added!"), message: nil, dismissButton: .default(Text("OK")))
+                          }
+                          .disabled(showAlert2)
+
+//                          .buttonStyle(.borderedProminent)
+//                          .alert("Friend Added!", isPresented: $showAlert) {
+//                              // Alert content
+//                          }
+//                          .disabled(showAlert2)
+
+
                       }
                     }.padding(15)
                     List {
-                        Section(header: Text("Thier next event")) {
+                        Section(header: Text("Next event attending:")) {
                                 Text(closestEvent)
                         }
                     }.scrollContentBackground(.hidden)

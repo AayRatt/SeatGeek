@@ -98,30 +98,15 @@
 		454372F92A55DAC0007153D8 /* SeatGeek */ = {
 			isa = PBXGroup;
 			children = (
-				4E8CCBC22A5A47F000C678B5 /* UserDetailView.swift */,
+				4E04EC272A6040B600050731 /* Controllers */,
+				4E04EC262A60408100050731 /* Models */,
+				4E04EC252A60403E00050731 /* Views */,
 				454372FA2A55DAC0007153D8 /* SeatGeekApp.swift */,
-				454372FC2A55DAC0007153D8 /* ContentView.swift */,
-				4587C06D2A55DC9100BE2AA8 /* LoginView.swift */,
-				4587C06F2A55DD0200BE2AA8 /* EventsView.swift */,
-				45A348B92A5771C70004BBD4 /* Event.swift */,
-				459A8A732A5B38AE00D6BC1A /* EventDetailView.swift */,
-				45A348B72A5651480004BBD4 /* SignUpView.swift */,
-				4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */,
-				4587C0752A55E9F400BE2AA8 /* CustomTextField.swift */,
-				4587C0712A55DD2200BE2AA8 /* MyEventsView.swift */,
-				4587C0772A55F44900BE2AA8 /* GrowingButton.swift */,
-				4587C06B2A55DC8800BE2AA8 /* MainView.swift */,
 				4587C0792A55F69300BE2AA8 /* GoogleService-Info.plist */,
-				455E695C2A5A13E8006CB0DE /* ProfileView.swift */,
 				454372FE2A55DAC1007153D8 /* Assets.xcassets */,
 				454373032A55DAC1007153D8 /* Persistence.swift */,
 				454373052A55DAC1007153D8 /* SeatGeek.xcdatamodeld */,
 				454373002A55DAC1007153D8 /* Preview Content */,
-				4E8CCBBC2A5A290B00C678B5 /* FirestoreController.swift */,
-				4E8CCBBE2A5A2B5F00C678B5 /* SearchFriends.swift */,
-				4E8CCBC02A5A3CB200C678B5 /* User.swift */,
-				4E8CCBC42A5A585100C678B5 /* FriendView.swift */,
-				4EC5BDDB2A5BA20E006CB697 /* FavoriteEventDetailedView.swift */,
 			);
 			path = SeatGeek;
 			sourceTree = "<group>";
@@ -132,6 +117,45 @@
 				454373012A55DAC1007153D8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4E04EC252A60403E00050731 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4587C0772A55F44900BE2AA8 /* GrowingButton.swift */,
+				4587C0752A55E9F400BE2AA8 /* CustomTextField.swift */,
+				4E8CCBBE2A5A2B5F00C678B5 /* SearchFriends.swift */,
+				4EC5BDDB2A5BA20E006CB697 /* FavoriteEventDetailedView.swift */,
+				4E8CCBC42A5A585100C678B5 /* FriendView.swift */,
+				455E695C2A5A13E8006CB0DE /* ProfileView.swift */,
+				4587C06B2A55DC8800BE2AA8 /* MainView.swift */,
+				4587C0712A55DD2200BE2AA8 /* MyEventsView.swift */,
+				45A348B72A5651480004BBD4 /* SignUpView.swift */,
+				459A8A732A5B38AE00D6BC1A /* EventDetailView.swift */,
+				4587C06F2A55DD0200BE2AA8 /* EventsView.swift */,
+				4587C06D2A55DC9100BE2AA8 /* LoginView.swift */,
+				454372FC2A55DAC0007153D8 /* ContentView.swift */,
+				4E8CCBC22A5A47F000C678B5 /* UserDetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4E04EC262A60408100050731 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				45A348B92A5771C70004BBD4 /* Event.swift */,
+				4E8CCBC02A5A3CB200C678B5 /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4E04EC272A6040B600050731 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4E8CCBBC2A5A290B00C678B5 /* FirestoreController.swift */,
+				4587C07E2A55F76B00BE2AA8 /* FirebaseAuthController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		4E8CCBB72A5A265B00C678B5 /* Frameworks */ = {

@@ -5,6 +5,7 @@ struct SearchFriends: View {
     @State private var friendToSearch = ""
     @EnvironmentObject var dbHelper: FirestoreController
     @State private var searchText = ""
+    @AppStorage("loggedUser") var loggedUser:String = ""
 
     var searchResults: [User] {
         if searchText.isEmpty {
@@ -32,7 +33,7 @@ struct SearchFriends: View {
                 }
                 .onAppear() {
                     if self.dbHelper.userList.isEmpty {
-                        self.dbHelper.getAllUsers()
+                        self.dbHelper.getAllUsers(loggedUser: self.loggedUser)
                     }
                 }
 

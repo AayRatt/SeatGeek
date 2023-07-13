@@ -35,7 +35,7 @@ class FirestoreController : ObservableObject{
     }
     
     
-    func getAllUsers(){
+    func getAllUsers(loggedUser:String){
     print(#function, "Trying to get all Users.")
             do{
                 
@@ -62,8 +62,16 @@ class FirestoreController : ObservableObject{
                                 
                                 //if new document added, perform required operations
                                 if docChange.type == .added{
-                                    self.userList.append(user)
-                                    print(#function, "New document added : \(user.name)")
+                                    
+                                    if(user.email == loggedUser){
+                                        
+                                        print(#function, "Logged User : \(user.name), not added")
+                                    }else{
+                                        
+                                        self.userList.append(user)
+                                        print(#function, "New document added : \(user.name)")
+                                    }
+                                   
                                 }
                                 
                                 //if a document deleted, perform required operations
@@ -89,6 +97,41 @@ class FirestoreController : ObservableObject{
                 print(#function, "Unable to get all employee from database : \(err)")
             }
         }
+    
+    func checkExistingFriend(loggedUser:String, friend: User, completion: @escaping (Bool, Error?) -> Void) {
+        
+        let eventsCollectionRef = db.collection(COLLECTION_USERS).document(loggedUser).collection(COLLECTION_FRIENDS)
+
+        // Build the query to search for events with matching criteria
+        let query = eventsCollectionRef
+            .whereField("email", isEqualTo: friend.email)
+            .whereField("name", isEqualTo: friend.name)
+
+        // Execute the query
+        query.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error checking existing event: \(error)")
+                completion(false, error)
+                return
+            }
+
+            guard let querySnapshot = querySnapshot else {
+                print("No existing events found")
+                completion(false, nil)
+                return
+            }
+
+            if !querySnapshot.isEmpty {
+                // Event already exists
+                print("Event already exists")
+                completion(true, nil)
+            } else {
+                // Event does not exist
+                print("Event does not exist")
+                completion(false, nil)
+            }
+        }
+    }
 
     func addFriend(loggedUser:String, friend: User, completion: @escaping (Bool, Error?) -> Void) throws {
         print(#function, "Inserting User to friendsList \(friend)")
@@ -196,12 +239,13 @@ class FirestoreController : ObservableObject{
                         return
                     }
                     
-                    // Assuming there is only one friend with the same name, delete the first one
                     let documentToDelete = documents[0]
                     documentToDelete.reference.delete { error in
                         if let error = error {
                             print(#function, "Unable to delete friend from the database: \(error)")
                         } else {
+                            self.friendList.removeAll()
+                            self.getMyFriends(loggedUser: loggedUser)
                             print("Friend deleted")
                         }
                     }
@@ -291,6 +335,46 @@ class FirestoreController : ObservableObject{
             completion(false, err)
         }
     }
+    
+    
+    func checkExistingEventinFavorites(currentuser:String,event: Event, completion: @escaping (Bool, Error?) -> Void) {
+        
+        let eventsCollectionRef = db.collection(COLLECTION_USERS).document(currentuser).collection(COLLECTION_EVENTS)
+
+        // Build the query to search for events with matching criteria
+        let query = eventsCollectionRef
+            .whereField("type", isEqualTo: event.type)
+            .whereField("datetimeUtc", isEqualTo: event.datetimeUtc)
+            .whereField("venue.name", isEqualTo: event.venue.name)
+            .whereField("venue.postalCode", isEqualTo: event.venue.postalCode)
+
+        // Execute the query
+        query.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error checking existing event: \(error)")
+                completion(false, error)
+                return
+            }
+
+            guard let querySnapshot = querySnapshot else {
+                print("No existing events found")
+                completion(false, nil)
+                return
+            }
+
+            if !querySnapshot.isEmpty {
+                // Event already exists
+                print("Event already exists")
+                completion(true, nil)
+            } else {
+                // Event does not exist
+                print("Event does not exist")
+                completion(false, nil)
+            }
+        }
+    }
+
+    
     
     func addUserToEventAtendeeList(userToAdd: String, event: Event, completion: @escaping (Bool, Error?) -> Void) throws {
         print(#function, "Inserting attendee to event")
