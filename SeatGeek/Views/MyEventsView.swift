@@ -21,108 +21,108 @@ struct MyEventsView: View {
   var body: some View {
 
     NavigationView {
-ZStack {
-    Color("dark").ignoresSafeArea()
-          VStack {
-            List {
-                Section(header:Text("Events you are attending")){
-                  ForEach(self.dbHelper.favEventList, id: \.id) { event in
-                    HStack {
-                      NavigationLink(destination: FavoriteEventDetailedView(selectedEvent: event)) {
-                        Text("\(event.venue.name)")
-                          .bold()
-                      }
-                    }
+      ZStack {
+        Color("dark").ignoresSafeArea()
+        VStack {
+          List {
+            Section(header: Text("Events you are attending")) {
+              ForEach(self.dbHelper.favEventList, id: \.id) { event in
+                HStack {
+                  NavigationLink(destination: FavoriteEventDetailedView(selectedEvent: event)) {
+                    Text("\(event.venue.name)")
+                      .bold()
                   }
-                  .onDelete(perform: { indexSet in
-
-                    
-                    deleteIndexSet = indexSet
-                    showingDeleteAlert = true
-                    
-
-                  })
+                }
               }
-              .alert(isPresented: $showingDeleteAlert) {
-                Alert(
-                  title: Text("Remove Event?"),
-                  message: Text("Are you sure you want to remove this event?"),
-                  primaryButton: .destructive(Text("Delete")) {
-                    if let indexSet = deleteIndexSet {
-                      for index in indexSet {
-                        let eventToDelete = dbHelper.favEventList[index]
+              .onDelete(perform: { indexSet in
 
-                        self.dbHelper.deleteEventFromFavorites(
-                          loggedUser: self.loggedUser, eventToDelete: eventToDelete)
+                deleteIndexSet = indexSet
+                showingDeleteAlert = true
 
-                        self.dbHelper.deleteAttendee(loggedUser: self.loggedUser, event: eventToDelete) {
-                          success, error in
+              })
+            }
+            .alert(isPresented: $showingDeleteAlert) {
+              Alert(
+                title: Text("Remove Event?"),
+                message: Text("Are you sure you want to remove this event?"),
+                primaryButton: .destructive(Text("Delete")) {
+                  if let indexSet = deleteIndexSet {
+                    for index in indexSet {
+                      let eventToDelete = dbHelper.favEventList[index]
 
-                          if success {
+                      self.dbHelper.deleteEventFromFavorites(
+                        loggedUser: self.loggedUser, eventToDelete: eventToDelete)
 
-                            print("Success Deleting attendee from event")
+                      self.dbHelper.deleteAttendee(
+                        loggedUser: self.loggedUser, event: eventToDelete
+                      ) {
+                        success, error in
 
-                          } else {
+                        if success {
 
-                            print("Error Deleting attendee from event")
-                          }
+                          print("Success Deleting attendee from event")
 
+                        } else {
+
+                          print("Error Deleting attendee from event")
                         }
 
                       }
+
                     }
+                  }
 
-                  },
-                  secondaryButton: .cancel()
-                )
-              }//onDelete
-            }.scrollContentBackground(.hidden)
-            
+                },
+                secondaryButton: .cancel()
+              )
+            }  //onDelete
+          }.scrollContentBackground(.hidden)
+
+        }
+        .alert(isPresented: $showingDeleteAlert2) {
+          Alert(
+            title: Text("Delete All Events From List"),
+            message: Text(
+              "Are you sure you want to delete all events from your favorite list? This action cannot be undone."
+            ),
+            primaryButton: .destructive(
+              Text("Delete"),
+              action: {
+
+                self.dbHelper.deleteAllFavoriteEvents(loggedUser: loggedUser)
+
+                self.dbHelper.deleteAttendeeFromMultipleEvents(loggedUser2: loggedUser)
+                self.dbHelper.favEventList.removeAll()
+
+              }),
+            secondaryButton: .cancel()
+          )
+        }
+        .onAppear {
+          self.dbHelper.favEventList.removeAll()
+          self.dbHelper.getMyEvents(loggedUser: loggedUser)
+        }
+        .toolbar {
+          ToolbarItem(placement: .navigationBarTrailing) {
+            EditButton()
           }
-          .alert(isPresented: $showingDeleteAlert2) {
-            Alert(
-              title: Text("Delete All Events From List"),
-              message: Text(
-                "Are you sure you want to delete all events from your favorite list? This action cannot be undone."
-              ),
-              primaryButton: .destructive(
-                Text("Delete"),
-                action: {
-
-                  self.dbHelper.deleteAllFavoriteEvents(loggedUser: loggedUser)
-
-                  self.dbHelper.deleteAttendeeFromMultipleEvents(loggedUser2: loggedUser)
-                  self.dbHelper.favEventList.removeAll()
-
-                }),
-              secondaryButton: .cancel()
-            )
-          }
-          .onAppear {
-            self.dbHelper.favEventList.removeAll()
-            self.dbHelper.getMyEvents(loggedUser: loggedUser)
-          }
-          .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-              EditButton()
-            }
-            ToolbarItemGroup(placement: .navigationBarLeading) {
-                if mode == .active {
-                Button {
-                  showingDeleteAlert2 = true
-                } label: {
-                  Text("Delete All")
-                }
+          ToolbarItemGroup(placement: .navigationBarLeading) {
+            if mode == .active {
+              Button {
+                showingDeleteAlert2 = true
+              } label: {
+                Text("Delete All")
               }
             }
           }
-          .environment(\.editMode, $mode)
+        }
+        .environment(\.editMode, $mode)
 
-}
-    }//Navigation View
+      }
+    }  //Navigation View
 
-  }//Body View
-}//View
+  }  //Body View
+}  //View
 
 struct MyEventsView_Previews: PreviewProvider {
   static var previews: some View {

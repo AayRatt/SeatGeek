@@ -52,10 +52,10 @@ class FirebaseAuthController:ObservableObject {
                         "date": "today"
                     ]
                     
-                    let friendsData: [String: Any] = [
-                        "name": "Mark",
-                        "email": "m@m.com"
-                    ]
+//                    let friendsData: [String: Any] = [
+//                        "name": "Mark",
+//                        "email": "m@m.com"
+//                    ]
                     
                     eventsRef.setData(eventsData) { error in
                         if let error = error {
@@ -65,13 +65,13 @@ class FirebaseAuthController:ObservableObject {
                         }
                     }
                     
-                    friendsRef.setData(friendsData) { error in
-                        if let error = error {
-                            print(#function, "Error saving events data: \(error)")
-                        } else {
-                            print(#function, "Events data saved successfully")
-                        }
-                    }
+//                    friendsRef.setData(friendsData) { error in
+//                        if let error = error {
+//                            print(#function, "Error saving events data: \(error)")
+//                        } else {
+//                            print(#function, "Events data saved successfully")
+//                        }
+//                    }
                     
                     
                     print(#function, "AuthResult : \(result)")
