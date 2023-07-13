@@ -20,6 +20,13 @@ struct ProfileView: View {
   @State private var userName:String = "Lorem Ipsum"
   @State private var showingImagePicker:Bool = false
   @State private var inputImage: UIImage?
+    
+    private var imageURL:String {
+        
+        let formattedString = userName.replacingOccurrences(of: " ", with: "")
+        
+        return "https://api.multiavatar.com/\(formattedString).png?apikey=wYVkEXCNObPTpM"
+    }
   var body: some View {
     NavigationStack {
       ZStack {
@@ -30,18 +37,46 @@ struct ProfileView: View {
 //                .resizable()
 //                .frame(width: 90, height: 90)
 //                .clipShape(Circle())
-                                    VStack {
-                                        if let inputImage = inputImage {
-                            Image(uiImage: inputImage)
-                                .resizable()
-                                .frame(width: 90, height: 90)
-                                .clipShape(Circle())
-                        } else {
-                            Image(systemName: "person.circle")
-                                .resizable()
-                                .frame(width: 90, height: 90)
-                                .clipShape(Circle())
-                        }
+                
+                
+                        VStack {
+                            
+                            AsyncImage(url: URL(string: imageURL)) { phase in
+                                switch phase {
+                                case .empty:
+                                    // Placeholder view or loading indicator
+                                    Color.gray
+                                case .success(let image):
+                                    // Use the image view
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(maxWidth: 90, maxHeight: 90)
+                                        .clipShape(Circle())
+                                case .failure:
+                                    // Error view
+                                    Color.red
+                                }
+                            }
+
+  
+                                        
+//                        AsyncImage(url: URL(string:imageURL))
+//                                .frame(maxWidth: 90, maxHeight: 90)
+//                                .clipShape(Circle())
+//                                .imageScale(.small)
+                                        
+//                        if let inputImage = inputImage {
+//                        Image(uiImage: inputImage)
+//                                .resizable()
+//                                .frame(width: 90, height: 90)
+//                                .clipShape(Circle())
+//                        } else {
+//                            Image(systemName: "person.circle")
+//                                .resizable()
+//                                .frame(width: 90, height: 90)
+//                                .clipShape(Circle())
+//                        }
                     Button("Edit") {
                         showingImagePicker = true
                     }

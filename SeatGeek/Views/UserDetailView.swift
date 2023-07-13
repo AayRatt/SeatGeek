@@ -9,6 +9,13 @@ struct UserDetailView: View {
     @State private var showAlert: Bool = false
     @State private var showAlert2: Bool = false
     @State private var closestEvent = ""
+    
+    private var imageURL:String {
+        
+        let formattedString = userName.replacingOccurrences(of: " ", with: "")
+        
+        return "https://api.multiavatar.com/\(formattedString).png?apikey=wYVkEXCNObPTpM"
+    }
 
     var body: some View {
         
@@ -17,10 +24,28 @@ struct UserDetailView: View {
                 Color("dark").ignoresSafeArea()
                 VStack {
                     HStack {
-                      Image(systemName: "person.circle")
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                        .clipShape(Circle())
+                        
+                        AsyncImage(url: URL(string: imageURL)) { phase in
+                            switch phase {
+                            case .empty:
+                                // Placeholder view or loading indicator
+                                Color.gray
+                            case .success(let image):
+                                // Use the image view
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(maxWidth: 90, maxHeight: 90)
+                                    .clipShape(Circle())
+                            case .failure:
+                                // Error view
+                                Color.red
+                            }
+                        }
+//                      Image(systemName: "person.circle")
+//                        .resizable()
+//                        .frame(width: 90, height: 90)
+//                        .clipShape(Circle())
                       Spacer().frame(width: 30)
                       VStack {
                         Text(userName)
